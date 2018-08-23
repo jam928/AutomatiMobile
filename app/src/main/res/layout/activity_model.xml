@@ -7,7 +7,7 @@
     tools:context=".activity.UsedActivity">
 
     <ListView
-        android:id="@+id/usedModelsListView"
+        android:id="@+id/modelsListView"
         android:layout_width="368dp"
         android:layout_height="487dp"
         android:layout_marginBottom="8dp"

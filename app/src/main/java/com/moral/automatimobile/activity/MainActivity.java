@@ -9,21 +9,17 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.moral.automatimobile.R;
+import com.moral.automatimobile.model.Model;
 import com.moral.automatimobile.session.SaveSharedPreference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-
-    @BindView(R.id.newCardView)
-    CardView newCardView;
-
-    @BindView(R.id.usedCarView)
-    CardView usedCarView;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
@@ -45,24 +41,6 @@ public class MainActivity extends AppCompatActivity {
             navigation.getMenu().removeItem(R.id.navigation_logout);
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-
-        // if the new card view get clicked
-        newCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToPage("New");
-            }
-        });
-
-        // if the used card view get clicked
-        usedCarView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToPage("Used");
-            }
-        });
-
 
     }
 
@@ -107,14 +85,29 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case "New":
-                intent = new Intent(getApplicationContext(), NewActivity.class);
+                intent = new Intent(getApplicationContext(), ModelActivity.class);
+                intent.putExtra("New","newCar");
                 startActivity(intent);
                 break;
             case "Used":
-                intent = new Intent(getApplicationContext(), UsedActivity.class);
+                intent = new Intent(getApplicationContext(), ModelActivity.class);
+                intent.putExtra("Used","usedCar");
                 startActivity(intent);
                 break;
         }
+    }
+
+    public void onClick(View view) {
+        Button button = (Button)view;
+        String buttonText = button.getText().toString();
+
+        Intent intent = new Intent(getApplicationContext(), ModelActivity.class);
+        if(buttonText.equals("New Cars")) {
+            intent.putExtra("Car", "newCar");
+        } else {
+            intent.putExtra("Car", "usedCar");
+        }
+        startActivity(intent);
     }
 
 

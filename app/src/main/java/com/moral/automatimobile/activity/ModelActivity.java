@@ -12,10 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.moral.automatimobile.R;
-import com.moral.automatimobile.model.Car;
+import com.moral.automatimobile.adapter.ListAdapter;
 import com.moral.automatimobile.model.Model;
 import com.moral.automatimobile.network.RetrofitClient;
-import com.moral.automatimobile.adapter.ListAdapter;
 import com.moral.automatimobile.session.SaveSharedPreference;
 
 import java.util.ArrayList;
@@ -27,21 +26,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UsedActivity extends AppCompatActivity {
+public class ModelActivity extends AppCompatActivity {
 
-    @BindView(R.id.usedModelsListView)
-    ListView usedModelsListView;
+    @BindView(R.id.modelsListView)
+    ListView modelsListView;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
 
     ListAdapter listAdapter;
 
-    String modelName = "";
+    boolean isNew;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_used);
+        setContentView(R.layout.activity_model);
 
         ButterKnife.bind(this);
 
@@ -57,62 +57,42 @@ public class UsedActivity extends AppCompatActivity {
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        String modelName = getIntent().getStringExtra("topInfo");
-
-        switch (modelName) {
-            case "Automati 3M":
-                modelName = "3M";
-                break;
-            case "Automati 5A":
-                modelName = "5A";
-                break;
-            case "Automati 8R":
-                modelName = "8R";
-                break;
+        // Check if the user click new or used
+        String cond = getIntent().getStringExtra("Car");
+        if(cond != null) {
+            if(cond.equals("newCar")) {
+                isNew = true;
+                Log.i("You Clicked", "New");
+            }
+            else {
+                Log.i("You Clicked", "Used");
+                isNew = false;
+            }
         }
-
-        Call<List<Car>> call = RetrofitClient.getInstance().getCarService().getCarsByModel(modelName);
-        call.enqueue(new Callback<List<Car>>() {
+        // Get models from the rest end point
+        Call<List<Model>> call = RetrofitClient.getInstance().getCarService().getModels();
+        call.enqueue(new Callback<List<Model>>() {
             @Override
-            public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
+            public void onResponse(Call<List<Model>> call, Response<List<Model>> response) {
                 if(response.isSuccessful()) {
                     Log.i("Response", "Success");
-
-                    List<Car> cars = response.body();
-
-                    loadCarsToView(cars);
+                    List<Model> models = response.body();
+//                    for(Model model: models) {
+//                        Log.i("Model", model.toString());
+//                    }
+                    loadModelsToView(models);
+                } else {
+                    Log.i("Response", "Failed");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Car>> call, Throwable t) {
-                Log.i("Response", "Fail");
+            public void onFailure(Call<List<Model>> call, Throwable t) {
+
             }
         });
+
     }
-
-    private void loadCarsToView(List<Car> cars) {
-        final List<String> imgSrcs = new ArrayList<>();
-        final List<String> topInfo = new ArrayList<>();
-        List<String> bottomInfo = new ArrayList<>();
-
-        for(Car car: cars) {
-            imgSrcs.add(car.getModel().getImgSrc());
-            bottomInfo.add("$" + car.getPrice() + " Mileage: " + car.getMileage());
-            topInfo.add(car.getYear() + " Automati " + car.getModel().getName());
-        }
-
-        this.listAdapter = new ListAdapter(getApplicationContext(), topInfo, bottomInfo, imgSrcs);
-        usedModelsListView.setAdapter(this.listAdapter);
-
-        usedModelsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.i("TopInfo", topInfo.get(i));
-            }
-        });
-    }
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -120,9 +100,9 @@ public class UsedActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    goToPage("Home");
                     return true;
                 case R.id.navigation_login:
+                    // Change Intent
                     goToPage("Login");
                     return true;
                 case R.id.navigation_register:
@@ -152,10 +132,39 @@ public class UsedActivity extends AppCompatActivity {
                 intent = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(intent);
                 break;
-            case "Home":
-                intent = new Intent(getApplicationContext(), MainActivity.class);
+            case "New":
+                intent = new Intent(getApplicationContext(), NewActivity.class);
                 startActivity(intent);
+                break;
+            case "Used":
+                intent = new Intent(getApplicationContext(), UsedActivity.class);
+                startActivity(intent);
+                break;
         }
     }
+    private void loadModelsToView(List<Model> models) {
+        final List<String> imgSrcs = new ArrayList<>();
+        final List<String> topInfo = new ArrayList<>();
+        List<String> bottomInfo = new ArrayList<>();
 
+        for(Model model: models) {
+            imgSrcs.add(model.getImgSrc());
+            topInfo.add("Automati " + model.getName());
+            bottomInfo.add(model.getDescription());
+        }
+
+        this.listAdapter = new ListAdapter(getApplicationContext(), topInfo, bottomInfo, imgSrcs);
+        modelsListView.setAdapter(this.listAdapter);
+
+        modelsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(!isNew) {
+                    Intent intent = new Intent(getApplicationContext(), UsedActivity.class);
+                    intent.putExtra("topInfo", topInfo.get(i));
+                    startActivity(intent);
+                }
+            }
+        });
+    }
 }
