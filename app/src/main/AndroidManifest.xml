@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
-            android:theme = "@style/AppTheme.Dark">
+            android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,11 +34,17 @@
             android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.Dark" />
         <activity android:name=".activity.NewActivity" />
-        <activity android:name=".activity.UsedActivity" />
+        <activity
+            android:name=".activity.UsedActivity"
+            android:label="Select Used Car..." />
         <activity
             android:name=".activity.ModelActivity"
             android:label="Select Model..." />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".activity.ProfileActivity" />
+        <activity
+            android:name=".activity.CarDetailActivity"
+            android:label="Used Car Detail" />
+        <activity android:name=".activity.PaymentActivity"></activity>
     </application>
 
 </manifest>

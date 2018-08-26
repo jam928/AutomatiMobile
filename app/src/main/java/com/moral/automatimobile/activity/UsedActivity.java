@@ -57,7 +57,7 @@ public class UsedActivity extends AppCompatActivity {
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        String modelName = getIntent().getStringExtra("topInfo");
+        modelName = getIntent().getStringExtra("topInfo");
 
         switch (modelName) {
             case "Automati 3M":
@@ -91,7 +91,7 @@ public class UsedActivity extends AppCompatActivity {
         });
     }
 
-    private void loadCarsToView(List<Car> cars) {
+    private void loadCarsToView(final List<Car> cars) {
         final List<String> imgSrcs = new ArrayList<>();
         final List<String> topInfo = new ArrayList<>();
         List<String> bottomInfo = new ArrayList<>();
@@ -108,7 +108,13 @@ public class UsedActivity extends AppCompatActivity {
         usedModelsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.i("TopInfo", topInfo.get(i));
+//                Log.i("TopInfo", topInfo.get(i));
+                Intent intent = new Intent(getApplicationContext(), CarDetailActivity.class);
+
+                intent.putExtra("car_id", cars.get(i).getId());
+
+                startActivity(intent);
+
             }
         });
     }

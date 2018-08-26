@@ -24,11 +24,12 @@
     <Button
         android:id="@+id/newCarsButton"
         android:layout_width="276dp"
-        android:layout_height="wrap_content"
+        android:layout_height="63dp"
         android:layout_marginEnd="162dp"
         android:layout_marginStart="162dp"
         android:layout_marginTop="172dp"
         android:background="#2998ff"
+        android:onClick="onClick"
         android:text="New Cars"
         android:textColor="@android:color/white"
         android:textSize="24sp"
@@ -39,8 +40,8 @@
 
     <Button
         android:id="@+id/usedCarsButton"
-        android:layout_width="288dp"
-        android:layout_height="wrap_content"
+        android:layout_width="272dp"
+        android:layout_height="63dp"
         android:layout_marginBottom="170dp"
         android:layout_marginEnd="162dp"
         android:layout_marginStart="162dp"

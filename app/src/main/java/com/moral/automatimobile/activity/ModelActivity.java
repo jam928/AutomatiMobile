@@ -15,8 +15,10 @@ import com.moral.automatimobile.R;
 import com.moral.automatimobile.adapter.ListAdapter;
 import com.moral.automatimobile.model.Model;
 import com.moral.automatimobile.network.RetrofitClient;
+import com.moral.automatimobile.serializer.ObjectSerializer;
 import com.moral.automatimobile.session.SaveSharedPreference;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,7 +144,7 @@ public class ModelActivity extends AppCompatActivity {
                 break;
         }
     }
-    private void loadModelsToView(List<Model> models) {
+    private void loadModelsToView(final List<Model> models) {
         final List<String> imgSrcs = new ArrayList<>();
         final List<String> topInfo = new ArrayList<>();
         List<String> bottomInfo = new ArrayList<>();
@@ -159,9 +161,18 @@ public class ModelActivity extends AppCompatActivity {
         modelsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 if(!isNew) {
                     Intent intent = new Intent(getApplicationContext(), UsedActivity.class);
                     intent.putExtra("topInfo", topInfo.get(i));
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), NewActivity.class);
+                    try {
+                        intent.putExtra("Model", ObjectSerializer.serialize(models.get(i)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     startActivity(intent);
                 }
             }
