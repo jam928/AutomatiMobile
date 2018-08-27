@@ -3,6 +3,8 @@ package com.moral.automatimobile.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,7 +16,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-public class State{
+public class State implements Serializable{
 
     @SerializedName("id")
     private Integer id;

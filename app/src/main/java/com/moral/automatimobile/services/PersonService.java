@@ -15,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface PersonService {
 
@@ -29,4 +30,6 @@ public interface PersonService {
     @Headers({"Content-Type: application/json"})
     Call<StatusCheck> register(@Body Person person);
 
+    @GET("user/userEmail")
+    Call<Person> getPersonByEmail(@Query("email") String email);
 }

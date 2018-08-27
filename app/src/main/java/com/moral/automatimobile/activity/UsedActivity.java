@@ -16,8 +16,10 @@ import com.moral.automatimobile.model.Car;
 import com.moral.automatimobile.model.Model;
 import com.moral.automatimobile.network.RetrofitClient;
 import com.moral.automatimobile.adapter.ListAdapter;
+import com.moral.automatimobile.serializer.ObjectSerializer;
 import com.moral.automatimobile.session.SaveSharedPreference;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class UsedActivity extends AppCompatActivity {
 
     ListAdapter listAdapter;
 
-    String modelName = "";
+    Model model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,24 +56,19 @@ public class UsedActivity extends AppCompatActivity {
         } else {
             navigation.getMenu().removeItem(R.id.navigation_profile);
             navigation.getMenu().removeItem(R.id.navigation_logout);
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        modelName = getIntent().getStringExtra("topInfo");
-
-        switch (modelName) {
-            case "Automati 3M":
-                modelName = "3M";
-                break;
-            case "Automati 5A":
-                modelName = "5A";
-                break;
-            case "Automati 8R":
-                modelName = "8R";
-                break;
+        try {
+            model = (Model)ObjectSerializer.deserialize(getIntent().getStringExtra("used_model"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        Call<List<Car>> call = RetrofitClient.getInstance().getCarService().getCarsByModel(modelName);
+
+        Call<List<Car>> call = RetrofitClient.getInstance().getCarService().getCarsByModel(model.getName());
         call.enqueue(new Callback<List<Car>>() {
             @Override
             public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
@@ -110,9 +107,7 @@ public class UsedActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                Log.i("TopInfo", topInfo.get(i));
                 Intent intent = new Intent(getApplicationContext(), CarDetailActivity.class);
-
-                intent.putExtra("car_id", cars.get(i).getId());
-
+                SaveSharedPreference.setUsedCar(getApplicationContext(), cars.get(i));
                 startActivity(intent);
 
             }
@@ -124,44 +119,28 @@ public class UsedActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    goToPage("Home");
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     return true;
                 case R.id.navigation_login:
-                    goToPage("Login");
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     return true;
                 case R.id.navigation_register:
-                    goToPage("Register");
+                    startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
                     return true;
                 case R.id.navigation_profile:
-                    goToPage("Profile");
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                     return true;
                 case R.id.navigation_logout:
-                    SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
+                    SaveSharedPreference.setLoggedIn(getApplicationContext(), false, "none");
                     finish();
-                    startActivity(getIntent());
+                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
                     return true;
             }
             return false;
         }
     };
-
-    private void goToPage(String page) {
-        Intent intent;
-        switch (page) {
-            case "Login":
-                intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                break;
-            case "Register":
-                intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(intent);
-                break;
-            case "Home":
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-        }
-    }
 
 }

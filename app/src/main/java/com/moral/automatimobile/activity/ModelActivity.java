@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.moral.automatimobile.R;
 import com.moral.automatimobile.adapter.ListAdapter;
@@ -36,6 +37,9 @@ public class ModelActivity extends AppCompatActivity {
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
 
+    @BindView(R.id.loginCondTextView)
+    TextView loginCondTextView;
+
     ListAdapter listAdapter;
 
     boolean isNew;
@@ -53,9 +57,11 @@ public class ModelActivity extends AppCompatActivity {
         if(isLoggedIn) {
             navigation.getMenu().removeItem(R.id.navigation_login);
             navigation.getMenu().removeItem(R.id.navigation_register);
+            loginCondTextView.setVisibility(View.INVISIBLE);
         } else {
             navigation.getMenu().removeItem(R.id.navigation_profile);
             navigation.getMenu().removeItem(R.id.navigation_logout);
+            loginCondTextView.setVisibility(View.VISIBLE);
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -93,57 +99,38 @@ public class ModelActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     return true;
                 case R.id.navigation_login:
-                    // Change Intent
-                    goToPage("Login");
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     return true;
                 case R.id.navigation_register:
-                    goToPage("Register");
+                    startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
                     return true;
                 case R.id.navigation_profile:
-                    goToPage("Profile");
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                     return true;
                 case R.id.navigation_logout:
-                    SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
+                    SaveSharedPreference.setLoggedIn(getApplicationContext(), false, "none");
                     finish();
-                    startActivity(getIntent());
+                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
                     return true;
             }
             return false;
         }
     };
 
-    private void goToPage(String page) {
-        Intent intent;
-        switch (page) {
-            case "Login":
-                intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                break;
-            case "Register":
-                intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(intent);
-                break;
-            case "New":
-                intent = new Intent(getApplicationContext(), NewActivity.class);
-                startActivity(intent);
-                break;
-            case "Used":
-                intent = new Intent(getApplicationContext(), UsedActivity.class);
-                startActivity(intent);
-                break;
-        }
-    }
+
     private void loadModelsToView(final List<Model> models) {
         final List<String> imgSrcs = new ArrayList<>();
         final List<String> topInfo = new ArrayList<>();
@@ -164,7 +151,11 @@ public class ModelActivity extends AppCompatActivity {
 
                 if(!isNew) {
                     Intent intent = new Intent(getApplicationContext(), UsedActivity.class);
-                    intent.putExtra("topInfo", topInfo.get(i));
+                    try {
+                        intent.putExtra("used_model", ObjectSerializer.serialize(models.get(i)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getApplicationContext(), NewActivity.class);

@@ -1,9 +1,12 @@
 package com.moral.automatimobile.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +20,7 @@ import com.moral.automatimobile.model.Model;
 import com.moral.automatimobile.model.Transmission;
 import com.moral.automatimobile.network.RetrofitClient;
 import com.moral.automatimobile.serializer.ObjectSerializer;
+import com.moral.automatimobile.session.SaveSharedPreference;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -43,6 +47,9 @@ public class NewActivity extends AppCompatActivity {
     @BindView(R.id.engineSpinner)
     Spinner engineSpinner;
 
+    @BindView(R.id.navigation)
+    BottomNavigationView navigation;
+
     private List<Color> colors;
     private List<Transmission> transmissions;
     private List<Engine> engines;
@@ -58,6 +65,20 @@ public class NewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new);
 
         ButterKnife.bind(this);
+
+        // check if the user is logged in
+        boolean isLoggedIn = SaveSharedPreference.getLoggedStatus(getApplicationContext());
+
+        if(isLoggedIn) {
+            navigation.getMenu().removeItem(R.id.navigation_login);
+            navigation.getMenu().removeItem(R.id.navigation_register);
+        } else {
+            navigation.getMenu().removeItem(R.id.navigation_profile);
+            navigation.getMenu().removeItem(R.id.navigation_logout);
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         try {
             model = (Model) ObjectSerializer.deserialize(getIntent().getStringExtra("Model"));
@@ -107,6 +128,37 @@ public class NewActivity extends AppCompatActivity {
         });
 
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    return true;
+                case R.id.navigation_login:
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    return true;
+                case R.id.navigation_register:
+                    startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+                    return true;
+                case R.id.navigation_profile:
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    return true;
+                case R.id.navigation_logout:
+                    SaveSharedPreference.setLoggedIn(getApplicationContext(), false, "none");
+                    finish();
+                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    return true;
+            }
+            return false;
+        }
+    };
+
+
 
     private void loadCarProperties() {
 
@@ -200,16 +252,10 @@ public class NewActivity extends AppCompatActivity {
         Log.i("Transmission Selected", transmissions.get(transmissionSelected).toString());
         Log.i("Engine Selected", engines.get(engineSelected).toString());
 
-        Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
+        SaveSharedPreference.setNewCarProperties(getApplicationContext(), colors.get(colorSelected), transmissions.get(transmissionSelected), engines.get(engineSelected));
 
-        try {
-            intent.putExtra("Color", ObjectSerializer.serialize(colors.get(colorSelected)));
-            intent.putExtra("Transmission", ObjectSerializer.serialize(transmissions.get(transmissionSelected)));
-            intent.putExtra("Engine", ObjectSerializer.serialize(engines.get(engineSelected)));
-            startActivity(intent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
+        startActivity(intent);
 
 
     }

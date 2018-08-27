@@ -33,7 +33,9 @@
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".activity.NewActivity" />
+        <activity
+            android:name=".activity.NewActivity"
+            android:label="Customize your Car..." />
         <activity
             android:name=".activity.UsedActivity"
             android:label="Select Used Car..." />
@@ -44,7 +46,13 @@
         <activity
             android:name=".activity.CarDetailActivity"
             android:label="Used Car Detail" />
-        <activity android:name=".activity.PaymentActivity"></activity>
+        <activity
+            android:name=".activity.PaymentActivity"
+            android:label="Enter Payment Details..." />
+        <activity
+            android:name=".activity.ShippingActivity"
+            android:label="Enter Shipping Details..." />
+        <activity android:name=".activity.ConfirmActivity"></activity>
     </application>
 
 </manifest>

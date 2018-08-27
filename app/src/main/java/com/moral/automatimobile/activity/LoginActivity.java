@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void checkCredentials(String email, String password) {
+    private void checkCredentials(final String email, String password) {
 
         Person person = new Person();
         person.setEmail(email);
@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if(response.body().getIsJWT()) {
                         Toast.makeText(getApplicationContext(), "You Successfully Logged In", Toast.LENGTH_LONG).show();
-                        SaveSharedPreference.setLoggedIn(getApplicationContext(), true);
+                        SaveSharedPreference.setLoggedIn(getApplicationContext(), true, email);
                         loginSuccess();
                     }
                     else {

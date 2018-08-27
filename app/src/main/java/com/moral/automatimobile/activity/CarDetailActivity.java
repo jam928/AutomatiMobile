@@ -14,8 +14,11 @@ import android.widget.TextView;
 import com.moral.automatimobile.R;
 import com.moral.automatimobile.model.Car;
 import com.moral.automatimobile.network.RetrofitClient;
+import com.moral.automatimobile.serializer.ObjectSerializer;
 import com.moral.automatimobile.session.SaveSharedPreference;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +39,8 @@ public class CarDetailActivity extends AppCompatActivity {
 
     int id;
 
+    private Car car;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,42 +48,24 @@ public class CarDetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
+        try {
+            car = (Car) ObjectSerializer.deserialize(SaveSharedPreference.getUsedCar(getApplicationContext()));
+            // Load image to imageview
+            Picasso.get().load(car.getModel().getImgSrc()).into(carDetailImageView);
 
-        id = intent.getIntExtra("car_id", 0);
-
-        Log.i("ID", Integer.toString(id));
-
-        Call<Car> call = RetrofitClient.getInstance().getCarService().getCarById(id);
-
-        call.enqueue(new Callback<Car>() {
-            @Override
-            public void onResponse(Call<Car> call, Response<Car> response) {
-                if(response.isSuccessful()) {
-                    Car car = response.body();
-                    Log.i("Car", car.toString());
-
-                    // Load image to imageview
-                    Picasso.get().load(car.getModel().getImgSrc()).into(carDetailImageView);
-
-                    // Load car details to textview
-                    String text = car.getCondition().getType() + " " + car.getYear() + " Automati " + car.getModel().getName() + "\n" +
-                            "Price: " + car.getPrice() + " USD" + "\n" +
-                            "Mileage: " + car.getMileage() + "\n" +
-                            "Transmission: " + car.getTransmission().getName() + "\n" +
-                            "Title: " + car.getTitle() + "\n" +
-                            "Color: " + car.getColor().getName() + "\n" +
-                            "Vin: " + car.getVin() + "\n" +
-                            "Engine: " + car.getEngine().getLitres() + "L " + car.getEngine().getCylinders() + " cylinders";
-                    detailsTextView.setText(text);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Car> call, Throwable t) {
-                    Log.i("Car", "Car failed to load");
-            }
-        });
+            // Load car details to textview
+            String text = car.getCondition().getType() + " " + car.getYear() + " Automati " + car.getModel().getName() + "\n" +
+                    "Price: " + car.getPrice() + " USD" + "\n" +
+                    "Mileage: " + car.getMileage() + "\n" +
+                    "Transmission: " + car.getTransmission().getName() + "\n" +
+                    "Title: " + car.getTitle() + "\n" +
+                    "Color: " + car.getColor().getName() + "\n" +
+                    "Vin: " + car.getVin() + "\n" +
+                    "Engine: " + car.getEngine().getLitres() + "L " + car.getEngine().getCylinders() + " cylinders";
+            detailsTextView.setText(text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // check if the user is logged in
         boolean isLoggedIn = SaveSharedPreference.getLoggedStatus(getApplicationContext());
@@ -98,47 +85,34 @@ public class CarDetailActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    goToPage("Home");
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     return true;
                 case R.id.navigation_login:
-                    goToPage("Login");
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     return true;
                 case R.id.navigation_register:
-                    goToPage("Register");
+                    startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
                     return true;
                 case R.id.navigation_profile:
-                    goToPage("Profile");
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                     return true;
                 case R.id.navigation_logout:
-                    SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
+                    SaveSharedPreference.setLoggedIn(getApplicationContext(), false, "none");
                     finish();
-                    startActivity(getIntent());
+                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
                     return true;
             }
             return false;
         }
     };
 
-    private void goToPage(String page) {
-        Intent intent;
-        switch (page) {
-            case "Login":
-                intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                break;
-            case "Register":
-                intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(intent);
-                break;
-            case "Home":
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-        }
-    }
-
     public void onBuy(View view) {
         Log.i("Car_id", Integer.toString(id));
+
+         Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
+         startActivity(intent);
     }
 }
