@@ -149,22 +149,28 @@ public class ModelActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if(!isNew) {
-                    Intent intent = new Intent(getApplicationContext(), UsedActivity.class);
-                    try {
-                        intent.putExtra("used_model", ObjectSerializer.serialize(models.get(i)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    startActivity(intent);
+//                if(!isNew) {
+////                    Intent intent = new Intent(getApplicationContext(), UsedActivity.class);
+////                    try {
+////                        intent.putExtra("used_model", ObjectSerializer.serialize(models.get(i)));
+////                    } catch (IOException e) {
+////                        e.printStackTrace();
+////                    }
+////                    startActivity(intent);
+////                } else {
+////                    Intent intent = new Intent(getApplicationContext(), NewActivity.class);
+////                    try {
+////                        intent.putExtra("Model", ObjectSerializer.serialize(models.get(i)));
+////                    } catch (IOException e) {
+////                        e.printStackTrace();
+////                    }
+////                    startActivity(intent);
+////                }
+                SaveSharedPreference.setModel(getApplicationContext(), models.get(i));
+                if(isNew) {
+                    startActivity(new Intent(getApplicationContext(), NewActivity.class));
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), NewActivity.class);
-                    try {
-                        intent.putExtra("Model", ObjectSerializer.serialize(models.get(i)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    startActivity(intent);
+                    startActivity(new Intent(getApplicationContext(), UsedActivity.class));
                 }
             }
         });

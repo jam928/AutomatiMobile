@@ -142,14 +142,12 @@ public class PaymentActivity extends AppCompatActivity {
 
         Log.i("Congrats", "You entered a valid card");
 
-        Intent intent = new Intent(getApplicationContext(), ShippingActivity.class);
         CreditCard card = new CreditCard(cardNumber, cardDate, csc, person);
-        try {
-            intent.putExtra("Credit Card", ObjectSerializer.serialize(card));
-            startActivity(intent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SaveSharedPreference.setCard(getApplicationContext(), card);
+
+
+        Intent intent = new Intent(getApplicationContext(), ShippingActivity.class);
+        startActivity(intent);
 
 
     }

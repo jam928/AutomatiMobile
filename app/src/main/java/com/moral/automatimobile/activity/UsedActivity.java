@@ -62,10 +62,12 @@ public class UsedActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         try {
-            model = (Model)ObjectSerializer.deserialize(getIntent().getStringExtra("used_model"));
+            model = (Model) ObjectSerializer.deserialize(SaveSharedPreference.getModel(getApplicationContext()));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Log.i("Model", model.toString());
 
 
         Call<List<Car>> call = RetrofitClient.getInstance().getCarService().getCarsByModel(model.getName());
@@ -108,6 +110,7 @@ public class UsedActivity extends AppCompatActivity {
 //                Log.i("TopInfo", topInfo.get(i));
                 Intent intent = new Intent(getApplicationContext(), CarDetailActivity.class);
                 SaveSharedPreference.setUsedCar(getApplicationContext(), cars.get(i));
+                SaveSharedPreference.setCarCondition(getApplicationContext(), "Used Car");
                 startActivity(intent);
 
             }
@@ -143,4 +146,9 @@ public class UsedActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SaveSharedPreference.setCarCondition(getApplicationContext(), "");
+    }
 }

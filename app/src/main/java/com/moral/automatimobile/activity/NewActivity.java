@@ -81,7 +81,7 @@ public class NewActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         try {
-            model = (Model) ObjectSerializer.deserialize(getIntent().getStringExtra("Model"));
+            model = (Model) ObjectSerializer.deserialize(SaveSharedPreference.getModel(getApplicationContext()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -253,6 +253,7 @@ public class NewActivity extends AppCompatActivity {
         Log.i("Engine Selected", engines.get(engineSelected).toString());
 
         SaveSharedPreference.setNewCarProperties(getApplicationContext(), colors.get(colorSelected), transmissions.get(transmissionSelected), engines.get(engineSelected));
+        SaveSharedPreference.setCarCondition(getApplicationContext(), "New Car");
 
         Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
         startActivity(intent);

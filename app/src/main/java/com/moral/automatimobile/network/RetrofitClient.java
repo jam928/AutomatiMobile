@@ -1,6 +1,7 @@
 package com.moral.automatimobile.network;
 
 import com.moral.automatimobile.services.CarService;
+import com.moral.automatimobile.services.PaymentService;
 import com.moral.automatimobile.services.PersonService;
 
 import java.io.IOException;
@@ -56,5 +57,7 @@ public class RetrofitClient {
     public PersonService getPersonService() {
         return retrofit.create(PersonService.class);
     }
+
+    public PaymentService getPaymentService() {return retrofit.create(PaymentService.class);}
 
 }

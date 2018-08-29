@@ -156,8 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
         Role role = new Role();
         role.setName("customer");
 
-        State state = new State();
-        state.setName(stateSelected);
+        State state = new State(stateSelected);
 
         Person person = new Person();
         person.setFirstName(firstName);

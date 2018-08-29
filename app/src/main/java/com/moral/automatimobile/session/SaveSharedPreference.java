@@ -6,7 +6,10 @@ import android.preference.PreferenceManager;
 
 import com.moral.automatimobile.model.Car;
 import com.moral.automatimobile.model.Color;
+import com.moral.automatimobile.model.CreditCard;
 import com.moral.automatimobile.model.Engine;
+import com.moral.automatimobile.model.Model;
+import com.moral.automatimobile.model.Shipping;
 import com.moral.automatimobile.model.Transmission;
 import com.moral.automatimobile.serializer.ObjectSerializer;
 
@@ -29,7 +32,6 @@ public class SaveSharedPreference {
     public static void setNewCarProperties(Context context, Color color, Transmission transmission, Engine engine) {
         SharedPreferences.Editor editor = getPreferences(context).edit();
         try {
-            editor.putString("Car", "New");
             editor.putString("New_Car_Color", ObjectSerializer.serialize(color));
             editor.putString("New_Car_Transmission", ObjectSerializer.serialize(transmission));
             editor.putString("New_Car_Engine", ObjectSerializer.serialize(engine));
@@ -42,12 +44,47 @@ public class SaveSharedPreference {
     public static void setUsedCar(Context context, Car car) {
         SharedPreferences.Editor editor = getPreferences(context).edit();
         try {
-            editor.putString("Car", "Used");
             editor.putString("Used_Car", ObjectSerializer.serialize(car));
             editor.apply();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setCard(Context context, CreditCard creditCard) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        try {
+            editor.putString("Credit Card", ObjectSerializer.serialize(creditCard));
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setShipping(Context context, Shipping shipping) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        try {
+            editor.putString("Shipping", ObjectSerializer.serialize(shipping));
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setModel(Context context, Model model) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        try {
+            editor.putString("Model", ObjectSerializer.serialize(model));
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setCarCondition(Context context, String condition) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putString("Car", condition);
+        editor.apply();
     }
 
     // get login status
@@ -78,4 +115,23 @@ public class SaveSharedPreference {
     public static String getUsedCar(Context context) {
         return getPreferences(context).getString("Used_Car", "No used car found");
     }
+
+    // get car condition
+    public static String getCarCondition(Context context) {
+        return getPreferences(context).getString("Car", "Car condition not found");
+    }
+
+    public static String getModel(Context context) {
+        return getPreferences(context).getString("Model", "No Model found");
+    }
+
+    public static String getShipping(Context context) {
+        return getPreferences(context).getString("Shipping", "No Shipping obj found");
+    }
+
+    public static String getCreditCard(Context context) {
+        return getPreferences(context).getString("Credit Card", "No CreditCard obj found");
+    }
+
+
 }

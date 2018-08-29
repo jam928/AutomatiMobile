@@ -24,4 +24,7 @@ public class State implements Serializable{
     @SerializedName("name")
     private String name;
 
+    public State(String name) {
+        this.name = name;
+    }
 }

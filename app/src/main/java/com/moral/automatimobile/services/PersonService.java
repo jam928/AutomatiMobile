@@ -2,6 +2,7 @@ package com.moral.automatimobile.services;
 
 import com.moral.automatimobile.model.Jwt;
 import com.moral.automatimobile.model.Person;
+import com.moral.automatimobile.model.Shipping;
 import com.moral.automatimobile.model.State;
 import com.moral.automatimobile.model.StatusCheck;
 
@@ -32,4 +33,8 @@ public interface PersonService {
 
     @GET("user/userEmail")
     Call<Person> getPersonByEmail(@Query("email") String email);
+
+    @POST("user/updateShipping")
+    @Headers({"Content-Type: application/json"})
+    Call<StatusCheck> saveShipping(@Body Shipping shipping);
 }
