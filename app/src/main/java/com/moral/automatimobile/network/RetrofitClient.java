@@ -1,6 +1,7 @@
 package com.moral.automatimobile.network;
 
 import com.moral.automatimobile.services.CarService;
+import com.moral.automatimobile.services.FaqService;
 import com.moral.automatimobile.services.PaymentService;
 import com.moral.automatimobile.services.PersonService;
 
@@ -59,5 +60,7 @@ public class RetrofitClient {
     }
 
     public PaymentService getPaymentService() {return retrofit.create(PaymentService.class);}
+
+    public FaqService getFaqService() {return retrofit.create(FaqService.class);}
 
 }

@@ -16,10 +16,8 @@ import com.moral.automatimobile.R;
 import com.moral.automatimobile.adapter.ListAdapter;
 import com.moral.automatimobile.model.Model;
 import com.moral.automatimobile.network.RetrofitClient;
-import com.moral.automatimobile.serializer.ObjectSerializer;
 import com.moral.automatimobile.session.SaveSharedPreference;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,23 +105,38 @@ public class ModelActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+            Intent intent;
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_login:
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    finish();
+                    intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_register:
-                    startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+                    finish();
+                    intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_profile:
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    finish();
+                    intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_logout:
                     SaveSharedPreference.setLoggedIn(getApplicationContext(), false, "none");
                     finish();
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
                     return true;
             }
             return false;
@@ -149,30 +162,23 @@ public class ModelActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-//                if(!isNew) {
-////                    Intent intent = new Intent(getApplicationContext(), UsedActivity.class);
-////                    try {
-////                        intent.putExtra("used_model", ObjectSerializer.serialize(models.get(i)));
-////                    } catch (IOException e) {
-////                        e.printStackTrace();
-////                    }
-////                    startActivity(intent);
-////                } else {
-////                    Intent intent = new Intent(getApplicationContext(), NewActivity.class);
-////                    try {
-////                        intent.putExtra("Model", ObjectSerializer.serialize(models.get(i)));
-////                    } catch (IOException e) {
-////                        e.printStackTrace();
-////                    }
-////                    startActivity(intent);
-////                }
                 SaveSharedPreference.setModel(getApplicationContext(), models.get(i));
                 if(isNew) {
                     startActivity(new Intent(getApplicationContext(), NewActivity.class));
+                    overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+
                 } else {
                     startActivity(new Intent(getApplicationContext(), UsedActivity.class));
+                    overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
     }
 }

@@ -102,23 +102,43 @@ public class PaymentActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+            Intent intent;
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_login:
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    finish();
+                    intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_register:
-                    startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+                    finish();
+                    intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_profile:
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    finish();
+                    intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_logout:
                     SaveSharedPreference.setLoggedIn(getApplicationContext(), false, "none");
                     finish();
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
                     return true;
             }
             return false;
@@ -148,8 +168,14 @@ public class PaymentActivity extends AppCompatActivity {
 
         Intent intent = new Intent(getApplicationContext(), ShippingActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
     }
 
     private boolean validateCard(String cardNumber, String cardDate, int csc) {
