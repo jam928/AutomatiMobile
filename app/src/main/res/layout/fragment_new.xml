@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:text="This is New TextView"-->
+        <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />-->
+
+    <ImageView
+        android:id="@+id/newCarImageView"
+        android:layout_width="match_parent"
+        android:layout_height="281dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.38"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/colorSpinner"
+        android:layout_width="376dp"
+        android:layout_height="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="277dp"
+        app:layout_constraintBottom_toTopOf="@+id/transmissionSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newCarImageView" />
+
+    <Spinner
+        android:id="@+id/transmissionSpinner"
+        android:layout_width="376dp"
+        android:layout_height="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="223dp"
+        app:layout_constraintBottom_toTopOf="@+id/engineSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorSpinner" />
+
+    <Spinner
+        android:id="@+id/engineSpinner"
+        android:layout_width="376dp"
+        android:layout_height="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="162dp"
+        android:layout_marginStart="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/onToPayButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transmissionSpinner" />
+
+    <Button
+        android:id="@+id/onToPayButton"
+        android:layout_width="251dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="39dp"
+        android:background="#2998ff"
+        android:text="On To Pay"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/engineSpinner"
+        app:layout_constraintVertical_bias="1.0" />
+
+</RelativeLayout>

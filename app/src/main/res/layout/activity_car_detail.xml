@@ -7,13 +7,13 @@
     tools:context=".activity.CarDetailActivity">
 
     <ImageView
-        android:id="@+id/carDetailImageView"
-        android:layout_width="0dp"
-        android:layout_height="281dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.38"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:id="@+id/carDetailImageView"
+    android:layout_width="0dp"
+    android:layout_height="281dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.38"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/detailsTextView"

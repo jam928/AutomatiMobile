@@ -63,7 +63,7 @@ public class BuyActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // See if its a new car or used car
         String carCondition = SaveSharedPreference.getCarCondition(getApplicationContext());
-        if(carCondition.equals("New Car")) {
+        if(carCondition.equals("New Cars")) {
             // Load the car properties
             isNew = true;
             try {
