@@ -4,14 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:text="This is New TextView"-->
-        <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />-->
-
     <ImageView
         android:id="@+id/newCarImageView"
         android:layout_width="match_parent"
@@ -70,7 +62,6 @@
         android:text="On To Pay"
         android:textAllCaps="false"
         android:textColor="#fff"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/engineSpinner"

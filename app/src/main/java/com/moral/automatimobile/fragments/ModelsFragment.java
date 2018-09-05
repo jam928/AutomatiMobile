@@ -44,6 +44,16 @@ public class ModelsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_model, container, false);
         ButterKnife.bind(this,view);
 
+        // check if the user is logged in
+        boolean isLoggedIn = SaveSharedPreference.getLoggedStatus(getContext());
+
+        if(isLoggedIn) {
+            loginCondTextView.setText("Select Model...");
+        } else {
+            loginCondTextView.setVisibility(View.VISIBLE);
+        }
+
+
         // Get models from the rest end point
         Call<List<Model>> call = RetrofitClient.getInstance().getCarService().getModels();
         call.enqueue(new Callback<List<Model>>() {

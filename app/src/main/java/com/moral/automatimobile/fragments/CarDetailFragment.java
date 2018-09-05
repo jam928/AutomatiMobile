@@ -80,7 +80,17 @@ public class CarDetailFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        Log.i("Clicked", "You clicked this button!");
+        Fragment fragment = new PaymentFragment();
+        loadFragment(fragment);
+    }
 
+    private void loadFragment(Fragment fragment) {
+        if(fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 }

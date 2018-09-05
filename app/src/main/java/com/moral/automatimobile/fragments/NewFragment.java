@@ -63,20 +63,30 @@ public class NewFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_new,container,false);
-        ButterKnife.bind(this, view);
 
-        onToPayButton.setOnClickListener(this);
-        try {
-            model = (Model) ObjectSerializer.deserialize(SaveSharedPreference.getModel(getContext()));
-        } catch (IOException e) {
-            e.printStackTrace();
+        // check if the user is logged in
+        boolean isLoggedIn = SaveSharedPreference.getLoggedStatus(getContext());
+        View view;
+        if(!isLoggedIn) {
+            Fragment fragment = new LoginFragment();
+            loadFragment(fragment);
+            return null;
+        } else {
+            view = inflater.inflate(R.layout.fragment_new,container,false);
+            ButterKnife.bind(this, view);
+
+            onToPayButton.setOnClickListener(this);
+            try {
+                model = (Model) ObjectSerializer.deserialize(SaveSharedPreference.getModel(getContext()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Get car properties
+            loadCarProperties();
+
+            return view;
         }
-
-        // Get car properties
-        loadCarProperties();
-
-        return view;
     }
 
     private void loadCarProperties() {
@@ -166,13 +176,6 @@ public class NewFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onPay(View view) {
-        Log.i("Clicked", "On Pay");
-        Log.i("Color Selected", colors.get(colorSelected).toString());
-        Log.i("Transmission Selected", transmissions.get(transmissionSelected).toString());
-        Log.i("Engine Selected", engines.get(engineSelected).toString());
-
-        SaveSharedPreference.setNewCarProperties(getContext(), colors.get(colorSelected), transmissions.get(transmissionSelected), engines.get(engineSelected));
-        SaveSharedPreference.setCarCondition(getContext(), "New Car");
 
 //        Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
 ////        startActivity(intent);
@@ -180,18 +183,27 @@ public class NewFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void loadFragment(String buttonText) {
-        SaveSharedPreference.setCarCondition(getContext(), buttonText);
-        Fragment fragment = new ModelsFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+    private void loadFragment(Fragment fragment) {
+        if(fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     @Override
     public void onClick(View view) {
-        Log.i("Clicked", "You clicked this button!");
+
+        Log.i("Clicked", "On Pay");
+        Log.i("Color Selected", colors.get(colorSelected).toString());
+        Log.i("Transmission Selected", transmissions.get(transmissionSelected).toString());
+        Log.i("Engine Selected", engines.get(engineSelected).toString());
+
+        SaveSharedPreference.setNewCarProperties(getContext(), colors.get(colorSelected), transmissions.get(transmissionSelected), engines.get(engineSelected));
+
+        Fragment fragment = new PaymentFragment();
+        loadFragment(fragment);
     }
 }

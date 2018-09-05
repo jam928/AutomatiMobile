@@ -42,39 +42,48 @@ public class UsedFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_used,container,false);
-        ButterKnife.bind(this, view);
+
+        // check if the user is logged in
+        boolean isLoggedIn = SaveSharedPreference.getLoggedStatus(getContext());
+        View view;
+        if(!isLoggedIn) {
+            Fragment fragment = new LoginFragment();
+            loadFragment(fragment);
+            return null;
+        } else {
+            view = inflater.inflate(R.layout.fragment_used,container,false);
+            ButterKnife.bind(this, view);
+
+            try {
+                model = (Model) ObjectSerializer.deserialize(SaveSharedPreference.getModel(getContext()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Log.i("Model", model.toString());
 
 
-        try {
-            model = (Model) ObjectSerializer.deserialize(SaveSharedPreference.getModel(getContext()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            Call<List<Car>> call = RetrofitClient.getInstance().getCarService().getCarsByModel(model.getName());
+            call.enqueue(new Callback<List<Car>>() {
+                @Override
+                public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
+                    if(response.isSuccessful()) {
+                        Log.i("Response", "Success");
 
-        Log.i("Model", model.toString());
+                        List<Car> cars = response.body();
 
-
-        Call<List<Car>> call = RetrofitClient.getInstance().getCarService().getCarsByModel(model.getName());
-        call.enqueue(new Callback<List<Car>>() {
-            @Override
-            public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
-                if(response.isSuccessful()) {
-                    Log.i("Response", "Success");
-
-                    List<Car> cars = response.body();
-
-                    loadCarsToView(cars);
+                        loadCarsToView(cars);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Car>> call, Throwable t) {
-                Log.i("Response", "Fail");
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Car>> call, Throwable t) {
+                    Log.i("Response", "Fail");
+                }
+            });
 
-        return view;
+            return view;
+        }
     }
 
     private void loadCarsToView(final List<Car> cars) {
