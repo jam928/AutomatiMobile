@@ -13,11 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moral.automatimobile.R;
-import com.moral.automatimobile.activity.LoginActivity;
 import com.moral.automatimobile.activity.MainActivity;
 import com.moral.automatimobile.model.Jwt;
 import com.moral.automatimobile.model.Person;
@@ -156,9 +154,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void loginSuccess() {
+
+        // save the person to the session
+        Call<Person> call = RetrofitClient.getInstance().getPersonService().getPersonByEmail(emailTxt.getText().toString());
+        call.enqueue(new Callback<Person>() {
+            @Override
+            public void onResponse(Call<Person> call, Response<Person> response) {
+                if(response.isSuccessful()) {
+                    SaveSharedPreference.setPerson(getContext(), response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Person> call, Throwable t) {
+
+            }
+        });
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK |FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-
     }
 }

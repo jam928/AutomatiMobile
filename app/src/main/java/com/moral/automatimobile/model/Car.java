@@ -51,7 +51,7 @@ public class Car implements Serializable {
     private Object epa;
 
     @SerializedName("price")
-    private int price;
+    private double price;
 
     @SerializedName("lease")
     private Object lease;
@@ -66,4 +66,17 @@ public class Car implements Serializable {
     private Person person;
 
 
+    public Car(int year, int mileage, String title, Model model, Color color, Transmission transmission, Engine engine, Condition condition, double price, String vin, Person person) {
+        this.year = year;
+        this.mileage = mileage;
+        this.title = title;
+        this.model = model;
+        this.color = color;
+        this.transmission = transmission;
+        this.engine = engine;
+        this.condition = condition;
+        this.price = price;
+        this.vin = vin;
+        this.person = person;
+    }
 }

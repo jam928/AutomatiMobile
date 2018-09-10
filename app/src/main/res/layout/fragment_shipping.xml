@@ -1,60 +1,67 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="fill_parent"
+android:layout_height="match_parent"
+android:fitsSystemWindows="true">
+
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
-
-    <EditText
-        android:id="@+id/nameShippingEditText"
-        android:layout_width="348dp"
+    <TextView
+        android:id="@+id/savedAddressTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_marginTop="25dp"
+        android:text="Saved Shipping Addresses"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/savedAddressRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp">
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/shippingHeaderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="123dp"
-        android:ems="10"
-        android:hint="Enter Name"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/addressShippingEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:layout_weight="1"
+        android:text="Enter Shipping Details.."
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
 
     <ImageView
         android:id="@+id/nameShippingImageView"
-        android:layout_width="30dp"
+        android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/nameShippingEditText"
-        app:layout_constraintEnd_toStartOf="@+id/nameShippingEditText"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="30dp"
         app:srcCompat="@drawable/ic_name" />
 
-    <ImageView
-        android:id="@+id/stateShippingImageView"
-        android:layout_width="30dp"
-        android:layout_height="45dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/stateShippingSpinner"
-        app:layout_constraintEnd_toStartOf="@+id/stateShippingSpinner"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cityShippingImageView"
-        app:srcCompat="@drawable/ic_state" />
-
     <EditText
-        android:id="@+id/addressShippingEditText"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:id="@+id/nameShippingEditText"
+        android:layout_width="356dp"
+        android:layout_height="45dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="192dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="-45dp"
         android:ems="10"
-        android:hint="Enter Address"
-        android:inputType="text|textPostalAddress"
-        app:layout_constraintBottom_toTopOf="@+id/cityShippingEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameShippingEditText" />
+        android:hint="Enter Name"
+        android:inputType="textPersonName" />
 
     <ImageView
         android:id="@+id/addressShippingImageView"
@@ -62,50 +69,60 @@
         android:layout_height="24dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="201dp"
-        app:layout_constraintEnd_toStartOf="@+id/addressShippingEditText"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameShippingImageView"
+        android:layout_marginTop="40dp"
         app:srcCompat="@drawable/ic_address" />
 
-    <Spinner
-        android:id="@+id/stateShippingSpinner"
-        android:layout_width="337dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="148dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/stateShippingImageView"
-        app:layout_constraintTop_toBottomOf="@+id/cityShippingEditText" />
-
     <EditText
-        android:id="@+id/cityShippingEditText"
-        android:layout_width="348dp"
+        android:id="@+id/addressShippingEditText"
+        android:layout_width="356dp"
         android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="210dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="-40dp"
         android:ems="10"
-        android:hint="Enter City"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/stateShippingSpinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addressShippingEditText" />
+        android:hint="Enter Address"
+        android:inputType="text|textPostalAddress" />
 
     <ImageView
         android:id="@+id/cityShippingImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/cityShippingEditText"
-        app:layout_constraintEnd_toStartOf="@+id/cityShippingEditText"
-        app:layout_constraintHorizontal_bias="0.142"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addressShippingImageView"
+        android:layout_centerVertical="true"
         app:srcCompat="@drawable/ic_city" />
+
+    <EditText
+        android:id="@+id/cityShippingEditText"
+        android:layout_width="356dp"
+        android:layout_height="45dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="-40dp"
+        android:ems="10"
+        android:hint="Enter City"
+        android:inputType="textPersonName" />
+
+    <ImageView
+        android:id="@+id/stateShippingImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="49dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/stateShippingSpinner"
+        android:layout_marginTop="40dp"
+        app:srcCompat="@drawable/ic_state" />
+
+    <Spinner
+        android:id="@+id/stateShippingSpinner"
+        android:layout_width="356dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="-45dp" />
 
     <Button
         android:id="@+id/shippingButton"
@@ -113,25 +130,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="53dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="49dp"
+        android:layout_marginTop="30dp"
         android:background="#2998ff"
         android:onClick="onConfirm"
         android:text="Review and Confirm"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.538"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/shippingHeaderTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="19dp"
-        android:text="Enter Shipping Details.."
         android:textSize="18sp" />
-</RelativeLayout>
+
+</LinearLayout>
+</ScrollView>

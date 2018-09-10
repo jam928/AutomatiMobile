@@ -30,4 +30,7 @@ public class Condition implements Serializable {
     @SerializedName("description")
     private String description;
 
+    public Condition(String type) {
+        this.type = type;
+    }
 }

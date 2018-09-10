@@ -37,4 +37,11 @@ public interface PersonService {
     @POST("user/updateShipping")
     @Headers({"Content-Type: application/json"})
     Call<StatusCheck> saveShipping(@Body Shipping shipping);
+
+    @POST("user/updateBalance")
+    @Headers({"Content-Type: application/json"})
+    Call<Object> updateBalance(@Body Person person);
+
+    @GET("user/shipsAddress")
+    Call<List<Shipping>> getShippingAddressByEmail(@Query("email") String email);
 }

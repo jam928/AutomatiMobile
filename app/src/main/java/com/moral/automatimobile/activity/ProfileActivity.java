@@ -36,46 +36,8 @@ public class ProfileActivity extends AppCompatActivity {
             navigation.getMenu().removeItem(R.id.navigation_profile);
             navigation.getMenu().removeItem(R.id.navigation_logout);
         }
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            Intent intent;
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(intent);
-                    return true;
-                case R.id.navigation_login:
-                    intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(intent);
-                    return true;
-                case R.id.navigation_register:
-                    intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(intent);
-                    return true;
-                case R.id.navigation_profile:
-                    return true;
-                case R.id.navigation_logout:
-                    SaveSharedPreference.setLoggedIn(getApplicationContext(), false, "none");
-                    finish();
-                    intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(intent);
-                    return true;
-            }
-            return false;
-        }
-    };
 
     public void onFaq(View view) {
         Intent intent = new Intent(getApplicationContext(), FaqActivity.class);

@@ -31,7 +31,7 @@ public class CreditCard implements Serializable {
     @SerializedName("csc")
     private int csc;
 
-    @SerializedName("person")
+    @SerializedName("owner")
     private Person person;
 
     public CreditCard(String creditCardNumber, String expirationDate, int csc, Person person) {

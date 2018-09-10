@@ -49,6 +49,6 @@ public class Person implements Serializable {
     private Role role;
 
     @SerializedName("balance")
-    private int balance;
+    private double balance;
 
 }

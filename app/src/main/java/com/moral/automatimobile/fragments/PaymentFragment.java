@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -56,7 +58,13 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.paymentButton)
     Button paymentButton;
 
+    @BindView(R.id.savedCardsRadioGroup)
+    RadioGroup savedCardsRG;
+
     private Person person;
+    private List<CreditCard> savedCards;
+    private boolean radioButtonClicked;
+    private int cardSelectedIndex;
 
     @Nullable
     @Override
@@ -66,26 +74,67 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
 
         paymentButton.setOnClickListener(this);
 
-        if(!SaveSharedPreference.getEmail(getContext()).equals("none")) {
-            Call<Person> call = RetrofitClient.getInstance().getPersonService().getPersonByEmail(SaveSharedPreference.getEmail(getContext()));
+//        if(!SaveSharedPreference.getEmail(getContext()).equals("none")) {
+//            Call<Person> call = RetrofitClient.getInstance().getPersonService().getPersonByEmail(SaveSharedPreference.getEmail(getContext()));
+//
+//            call.enqueue(new Callback<Person>() {
+//                @Override
+//                public void onResponse(Call<Person> call, Response<Person> response) {
+//                    if (response.isSuccessful()) {
+//                        person = response.body();
+//                        Log.i("Person from payment", person.toString());
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<Person> call, Throwable t) {
+//
+//                }
+//            });
+//        } else {
+//            Log.i("Login", "Login to continue");
+//        }
 
-            call.enqueue(new Callback<Person>() {
-                @Override
-                public void onResponse(Call<Person> call, Response<Person> response) {
-                    if (response.isSuccessful()) {
-                        person = response.body();
-                        Log.i("Person from payment", person.toString());
+        try {
+            person = (Person)ObjectSerializer.deserialize(SaveSharedPreference.getPerson(getContext()));
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Call<List<CreditCard>> call = RetrofitClient.getInstance().getPaymentService().getCreditCardsByEmail(SaveSharedPreference.getEmail(getContext()));
+        call.enqueue(new Callback<List<CreditCard>>() {
+            @Override
+            public void onResponse(Call<List<CreditCard>> call, Response<List<CreditCard>> response) {
+                if(response.isSuccessful()) {
+                    Log.i("CreditCards saved", response.body().toString());
+                    savedCards = response.body();
+
+                    int buttons = savedCards.size();
+                    for(int i = 0; i < buttons; i++) {
+                        RadioButton radioButton = new RadioButton(getContext());
+                        radioButton.setId(i);
+                        String radioBtnTxt = "Number: " + savedCards.get(i).getCreditCardNumber() + "\n"
+                                + "Expiration Date: " + savedCards.get(i).getExpirationDate() + "\n";
+                        radioButton.setText(radioBtnTxt);
+                        savedCardsRG.addView(radioButton);
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<Person> call, Throwable t) {
+            @Override
+            public void onFailure(Call<List<CreditCard>> call, Throwable t) {
 
-                }
-            });
-        } else {
-            Log.i("Login", "Login to continue");
-        }
+            }
+        });
+
+        savedCardsRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                radioButtonClicked = true;
+                cardSelectedIndex = i;
+            }
+        });
 
 
         return view;
@@ -95,28 +144,33 @@ public class PaymentFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
 
-        final String cardNumber = cardNumberEditText.getText().toString().replaceAll(" ", "");
-        final String cardDate = cardDateEditText.getText().toString();
-        int csc = 0;
-        if(cvvEditText.getText().toString().equals("")) {
-            csc = 0;
+        // If one of the radiobuttons were clicked add the saved card
+        if(radioButtonClicked) {
+            SaveSharedPreference.setCard(getContext(), savedCards.get(cardSelectedIndex));
+            Log.i("Card Saved", savedCards.get(cardSelectedIndex).toString());
         } else {
-            csc = Integer.parseInt(cvvEditText.getText().toString());
-        }
+            final String cardNumber = cardNumberEditText.getText().toString().replaceAll(" ", "");
+            final String cardDate = cardDateEditText.getText().toString();
+            int csc = 0;
+            if(cvvEditText.getText().toString().equals("")) {
+                csc = 0;
+            } else {
+                csc = Integer.parseInt(cvvEditText.getText().toString());
+            }
 
-        if(!validateCard(cardNumber, cardDate, csc)) {
-            Toast.makeText(getContext(), "Invalid card", Toast.LENGTH_LONG).show();
-            return;
-        }
+            if(!validateCard(cardNumber, cardDate, csc)) {
+                Toast.makeText(getContext(), "Invalid card", Toast.LENGTH_LONG).show();
+                return;
+            }
 //        Log.i("CreditCardNumber", cardNumber);
 //        Log.i("CardDate", cardDate);
 //        Log.i("CSC", Integer.toString(csc));
 //        Log.i("Congrats", "You entered a valid card");
 
-        CreditCard card = new CreditCard(cardNumber, cardDate, csc, person);
-        Log.i("Credit Card before save", card.toString());
-        SaveSharedPreference.setCard(getContext(), card);
-
+            CreditCard card = new CreditCard(cardNumber, cardDate, csc, person);
+            Log.i("Credit Card before save", card.toString());
+            SaveSharedPreference.setCard(getContext(), card);
+        }
         Fragment fragment = new ShippingFragment();
         loadFragment(fragment);
 

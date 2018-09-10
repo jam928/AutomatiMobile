@@ -1,10 +1,10 @@
 package com.moral.automatimobile.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,21 +13,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.moral.automatimobile.R;
-import com.moral.automatimobile.activity.BuyActivity;
 import com.moral.automatimobile.model.Person;
 import com.moral.automatimobile.model.Shipping;
 import com.moral.automatimobile.model.State;
 import com.moral.automatimobile.network.RetrofitClient;
+import com.moral.automatimobile.serializer.ObjectSerializer;
 import com.moral.automatimobile.session.SaveSharedPreference;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,9 +53,14 @@ public class ShippingFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.shippingButton)
     Button shippingButton;
 
+    @BindView(R.id.savedAddressRadioGroup)
+    RadioGroup savedAddressRG;
     String stateSelected = "";
 
     private Person person;
+    private List<Shipping> savedAddresses;
+    private boolean radioButtonClicked;
+    private int addressSelectedIndex;
 
     @Nullable
     @Override
@@ -65,6 +69,7 @@ public class ShippingFragment extends Fragment implements View.OnClickListener {
         ButterKnife.bind(this, view);
 
         shippingButton.setOnClickListener(this);
+
         Call<List<State>> call = RetrofitClient.getInstance().getPersonService().getStates();
         call.enqueue(new Callback<List<State>>() {
             @Override
@@ -78,26 +83,48 @@ public class ShippingFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        if(!SaveSharedPreference.getEmail(getContext()).equals("none")) {
-            Call<Person> call2 = RetrofitClient.getInstance().getPersonService().getPersonByEmail(SaveSharedPreference.getEmail(getContext()));
 
-            call2.enqueue(new Callback<Person>() {
-                @Override
-                public void onResponse(Call<Person> call2, Response<Person> response) {
-                    if (response.isSuccessful()) {
-                        person = response.body();
-                        Log.i("Person from payment", person.toString());
+        try {
+            person = (Person) ObjectSerializer.deserialize(SaveSharedPreference.getPerson(getContext()));
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Call<List<Shipping>> call2 = RetrofitClient.getInstance().getPersonService().getShippingAddressByEmail(SaveSharedPreference.getEmail(getContext()));
+        call2.enqueue(new Callback<List<Shipping>>() {
+            @Override
+            public void onResponse(Call<List<Shipping>> call, Response<List<Shipping>> response) {
+                if(response.isSuccessful()) {
+                    savedAddresses = response.body();
+
+
+                    int buttons = savedAddresses.size();
+                    for(int i = 0; i < buttons; i++) {
+                        RadioButton radioButton = new RadioButton(getContext());
+                        radioButton.setId(i);
+                        String radioBtnText = "Name: " + savedAddresses.get(i).getFirstName() + " " + savedAddresses.get(i).getLastName() + "\n" +
+                                "Address: " + savedAddresses.get(i).getStreet() + "\n" +
+                                "City: " + savedAddresses.get(i).getCity() + "\n"  +
+                                "State: " + savedAddresses.get(i).getState().getName() + "\n";
+                        radioButton.setText(radioBtnText);
+                        savedAddressRG.addView(radioButton);
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<Person> call2, Throwable t) {
+            @Override
+            public void onFailure(Call<List<Shipping>> call, Throwable t) {
 
-                }
-            });
-        } else {
-            Log.i("Login", "Login to continue");
-        }
+            }
+        });
+
+        savedAddressRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                radioButtonClicked = true;
+                addressSelectedIndex = i;
+            }
+        });
 
         return view;
     }
@@ -127,41 +154,57 @@ public class ShippingFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        String name = nameShippingEditText.getText().toString();
-        String address = addressShipEditText.getText().toString();
-        String city = cityShipEditText.getText().toString();
 
-        Log.i("Name", name);
-        Log.i("Address", address);
-        Log.i("City", city);
-        Log.i("State Selected", stateSelected);
+        if(radioButtonClicked) {
+            SaveSharedPreference.setShipping(getContext(),savedAddresses.get(addressSelectedIndex));
+        } else {
+            String name = nameShippingEditText.getText().toString();
+            String address = addressShipEditText.getText().toString();
+            String city = cityShipEditText.getText().toString();
 
-        if(!validShipping(name, address, city)) {
-            Toast.makeText(getContext(), "Invalid shipping input", Toast.LENGTH_LONG).show();
-            return;
+            Log.i("Name", name);
+            Log.i("Address", address);
+            Log.i("City", city);
+            Log.i("State Selected", stateSelected);
+
+            if(!validShipping(name, address, city)) {
+                Toast.makeText(getContext(), "Invalid shipping input", Toast.LENGTH_LONG).show();
+                return;
+            }
+            String[] temp = name.split("\\s+");
+            String firstName = temp[0];
+            String lastName = temp[1];
+            String email = SaveSharedPreference.getEmail(getContext());
+            Call<Person> call = RetrofitClient.getInstance().getPersonService().getPersonByEmail(email);
+            call.enqueue(new Callback<Person>() {
+                @Override
+                public void onResponse(Call<Person> call, Response<Person> response) {
+                    person = response.body();
+                }
+
+                @Override
+                public void onFailure(Call<Person> call, Throwable t) {
+
+                }
+            });
+            Shipping shipping = new Shipping(firstName,lastName, address, city, new State(stateSelected), person);
+            Log.i("Shipping before save", shipping.toString());
+            SaveSharedPreference.setShipping(getContext(),shipping);
         }
-        String[] temp = name.split("\\s+");
-        String firstName = temp[0];
-        String lastName = temp[1];
-        String email = SaveSharedPreference.getEmail(getContext());
-        Call<Person> call = RetrofitClient.getInstance().getPersonService().getPersonByEmail(email);
-        call.enqueue(new Callback<Person>() {
-            @Override
-            public void onResponse(Call<Person> call, Response<Person> response) {
-                person = response.body();
-            }
+        Fragment fragment = new BuyFragment();
+        loadFragment(fragment);
 
-            @Override
-            public void onFailure(Call<Person> call, Throwable t) {
 
-            }
-        });
-        Shipping shipping = new Shipping(firstName,lastName, address, city, new State(stateSelected), person);
-        Log.i("Shipping before save", shipping.toString());
-        SaveSharedPreference.setShipping(getContext(),shipping);
+    }
 
-//        Intent intent = new Intent(getContext(), BuyActivity.class);
-//        startActivity(intent);
+    private void loadFragment(Fragment fragment) {
+        if(fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     private boolean validShipping(String name, String address, String city) {

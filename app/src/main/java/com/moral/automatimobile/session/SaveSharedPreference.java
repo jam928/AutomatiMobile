@@ -9,11 +9,14 @@ import com.moral.automatimobile.model.Color;
 import com.moral.automatimobile.model.CreditCard;
 import com.moral.automatimobile.model.Engine;
 import com.moral.automatimobile.model.Model;
+import com.moral.automatimobile.model.Person;
 import com.moral.automatimobile.model.Shipping;
 import com.moral.automatimobile.model.Transmission;
 import com.moral.automatimobile.serializer.ObjectSerializer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SaveSharedPreference {
 
@@ -87,6 +90,26 @@ public class SaveSharedPreference {
         editor.apply();
     }
 
+    public static void setPerson(Context context, Person person) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        try {
+            editor.putString("Person", ObjectSerializer.serialize(person));
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setSavedCreditCards(Context context, ArrayList<CreditCard> savedCards) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        try {
+            editor.putString("SavedCreditCards", ObjectSerializer.serialize(savedCards));
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // get login status
     public static boolean getLoggedStatus(Context context) {
         return getPreferences(context).getBoolean("logged_in", false);
@@ -133,5 +156,8 @@ public class SaveSharedPreference {
         return getPreferences(context).getString("Credit Card", "No CreditCard obj found");
     }
 
+    public static String getPerson(Context context) {
+        return getPreferences(context).getString("Person", "Person not found");
+    }
 
 }

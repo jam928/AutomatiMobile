@@ -4,13 +4,17 @@ import com.moral.automatimobile.model.Car;
 import com.moral.automatimobile.model.Color;
 import com.moral.automatimobile.model.Engine;
 import com.moral.automatimobile.model.Model;
+import com.moral.automatimobile.model.StatusCheck;
 import com.moral.automatimobile.model.Transmission;
 
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface CarService {
@@ -32,5 +36,13 @@ public interface CarService {
 
     @GET("engines")
     Call<List<Engine>> getEngines();
+
+    @POST("car/save")
+    @Headers({"Content-Type: application/json"})
+    Call<StatusCheck> addCar(@Body Car car);
+
+    @POST("car/update")
+    @Headers({"Content-Type: application/json"})
+    Call<Object> updateCar(@Body Car car);
 
 }

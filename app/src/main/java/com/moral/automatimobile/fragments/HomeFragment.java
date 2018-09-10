@@ -1,6 +1,5 @@
 package com.moral.automatimobile.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.moral.automatimobile.R;
-import com.moral.automatimobile.activity.ModelActivity;
 import com.moral.automatimobile.session.SaveSharedPreference;
 
 import butterknife.BindView;
