@@ -29,8 +29,6 @@
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".activity.ProfileActivity" />
-        <activity android:name=".activity.FaqActivity"></activity>
     </application>
 
 </manifest>

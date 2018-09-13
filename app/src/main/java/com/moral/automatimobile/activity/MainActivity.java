@@ -14,6 +14,8 @@ import android.widget.Button;
 import com.moral.automatimobile.R;
 import com.moral.automatimobile.fragments.HomeFragment;
 import com.moral.automatimobile.fragments.LoginFragment;
+import com.moral.automatimobile.fragments.ProfileFragment;
+import com.moral.automatimobile.fragments.RegisterFragment;
 import com.moral.automatimobile.session.SaveSharedPreference;
 
 import butterknife.BindView;
@@ -60,21 +62,14 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new HomeFragment();
                     return loadFragment(fragment);
                 case R.id.navigation_login:
-//                    intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//                    startActivity(intent);
                     fragment = new LoginFragment();
                     return loadFragment(fragment);
                 case R.id.navigation_register:
-                    intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(intent);
-                    return true;
+                    fragment = new RegisterFragment();
+                    return loadFragment(fragment);
                 case R.id.navigation_profile:
-                    intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(intent);
-                    return true;
+                    fragment = new ProfileFragment();
+                    return loadFragment(fragment);
                 case R.id.navigation_logout:
                     SaveSharedPreference.setLoggedIn(getApplicationContext(), false, "none");
                     finish();

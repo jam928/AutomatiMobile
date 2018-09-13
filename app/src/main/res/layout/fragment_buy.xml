@@ -26,8 +26,8 @@
 
         <TextView
             android:id="@+id/paymentInfoTextView"
-            android:layout_width="378dp"
-            android:layout_height="91dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="45dp" />
@@ -46,8 +46,8 @@
 
         <TextView
             android:id="@+id/shippingInfoTextView"
-            android:layout_width="376dp"
-            android:layout_height="118dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="45dp" />
@@ -65,8 +65,8 @@
 
         <TextView
             android:id="@+id/carInfoTextView"
-            android:layout_width="373dp"
-            android:layout_height="125dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="45dp" />

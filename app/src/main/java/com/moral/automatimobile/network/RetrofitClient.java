@@ -18,6 +18,8 @@ public class RetrofitClient {
 
     private static final String BASE_URL = "http://18.219.99.26:8060/AutomatiServer/";
     private static RetrofitClient mInstance;
+    private static final String oauth = "";
+    private static final String apiKey = "";
     private Retrofit retrofit;
 
     private RetrofitClient() {
